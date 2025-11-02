@@ -1,12 +1,17 @@
-# Decentralized Lottery
+# 🎲 Decentralized Lottery on Stellar
 
 ## Project Title
-**Provably Fair Decentralized Lottery on Stellar Blockchain**
+**Provably Fair Decentralized Lottery with Commit-Reveal Randomness**
 
 ## Project Description
-The Decentralized Lottery is a transparent and fair lottery system built on the Stellar blockchain using Soroban smart contracts. This platform eliminates the need for trust in centralized lottery operators by leveraging blockchain technology to ensure complete transparency, fairness, and verifiability of every draw.
+A fully decentralized, transparent, and provably fair lottery system built on the Stellar blockchain using Soroban smart contracts. This platform eliminates centralized lottery operators by leveraging blockchain technology, cryptographic commit-reveal schemes, and automatic prize distribution to ensure complete transparency, fairness, and verifiability.
 
-Participants can purchase lottery tickets with cryptocurrency, and winners are selected using a commit-reveal randomness scheme combined with blockchain entropy. All transactions, participants, and results are permanently stored on the blockchain, making the lottery provably fair and auditable by anyone.
+**Key Differentiators:**
+- 🔐 **Commit-Reveal Randomness**: Participants contribute to randomness generation, preventing manipulation
+- 💰 **Automatic Payouts**: Winners receive prizes automatically upon finalization
+- 🎫 **Flexible Ticket Rules**: Configurable single or multiple tickets per address
+- ✅ **Externally Verifiable**: Anyone can verify winner selection using documented algorithms
+- 📊 **100% On-Chain**: All data stored on Stellar blockchain - no external databases
 
 ---
 
@@ -15,78 +20,101 @@ Participants can purchase lottery tickets with cryptocurrency, and winners are s
 ### **Fully Implemented Features**
 
 #### 1. **Core Smart Contract** ✅
-- ✅ Admin initialization and management
-- ✅ Lottery round creation with configurable settings
-- ✅ Ticket purchase with token payments
-- ✅ Provably fair winner selection using commit-reveal scheme
-- ✅ Automatic prize pool distribution to winners
-- ✅ Round viewing and information querying
-- ✅ Storage TTL management for long-term data preservation
+- ✅ **Admin Management**: One-time initialization with admin and token addresses
+- ✅ **Round Creation**: Configurable ticket price, duration, and multiple-ticket policy
+- ✅ **Ticket Purchase**: Token-based payments with commit hash submission
+- ✅ **Seed Reveal**: Cryptographic verification of revealed seeds
+- ✅ **Winner Selection**: Deterministic, verifiable winner selection
+- ✅ **Automatic Payout**: Prize pool transferred atomically to winner
+- ✅ **Round Queries**: Public view function for all round details
 
-#### 2. **Advanced Randomness System** ✅
-- ✅ Commit-reveal scheme (preventing manipulation)
-- ✅ Blockchain entropy injection (ledger sequence)
-- ✅ Iterative seed combination algorithm
-- ✅ External verification support
-- ✅ Missing reveal handling (robust against non-participation)
+#### 2. **Commit-Reveal Randomness System** ✅
+- ✅ **Commit Phase**: Participants submit `SHA256(seed || address || round_id)` when buying tickets
+- ✅ **Reveal Phase**: 24-hour window after round ends for participants to reveal seeds
+- ✅ **Seed Verification**: Contract validates revealed seeds match commit hashes
+- ✅ **Iterative Combination**: `combined_hash = SHA256(SHA256(...SHA256(h || seed1) || seed2) ...)`
+- ✅ **Blockchain Entropy**: Adds ledger sequence to final hash for unpredictability
+- ✅ **Missing Reveal Handling**: Lottery proceeds even if some participants don't reveal
+- ✅ **External Verification**: Complete algorithm documented in VERIFICATION.md
 
 #### 3. **Payment & Prize Distribution** ✅
-- ✅ Token-based payment integration
-- ✅ Atomic token transfers (revert on failure)
-- ✅ Automatic prize pool accumulation
-- ✅ Automatic winner payout upon finalization
+- ✅ **Token Integration**: Uses Soroban token interface for payments
+- ✅ **Payment Validation**: Exact amount matching required
+- ✅ **Atomic Transfers**: Reverts entire transaction on transfer failure
+- ✅ **Prize Accumulation**: Automatic prize pool tracking
+- ✅ **Winner Payout**: Automatic transfer before state update (prevents reentrancy)
+- ✅ **Transfer Logging**: All transfers logged for audit trail
 
-#### 4. **Multiple Tickets Support** ✅
-- ✅ Configurable multiple tickets per address (per round)
-- ✅ Efficient duplicate checking (O(1) lookup)
-- ✅ Support for both fair and weighted lottery modes
+#### 4. **Multiple Tickets Configuration** ✅
+- ✅ **Per-Round Setting**: `allow_multiple` parameter in `create_round()`
+- ✅ **Single Ticket Mode**: One ticket per address (fair lottery)
+- ✅ **Multiple Ticket Mode**: Unlimited tickets per address (weighted lottery)
+- ✅ **Efficient Checking**: O(1) duplicate detection using `ParticipantMap`
+- ✅ **Storage Optimization**: Duplicate map only used when `allow_multiple = false`
 
-#### 5. **Testing & Quality Assurance** ✅
-- ✅ 18 comprehensive unit tests (100% pass rate)
-- ✅ Token transfer mocking
-- ✅ Edge case coverage
-- ✅ Error condition validation
-- ✅ Full lifecycle testing
+#### 5. **Testing & CI/CD** ✅
+- ✅ **18 Unit Tests**: 100% pass rate covering all scenarios
+- ✅ **Test Categories**: Init, round creation, ticket purchase, commit-reveal, finalization, multiple tickets, full lifecycle
+- ✅ **Token Mocking**: All token transfers properly mocked and verified
+- ✅ **Edge Cases**: Missing reveals, wrong amounts, timing restrictions, unauthorized access
+- ✅ **CI Pipeline**: GitHub Actions workflow with 6 jobs (test, build, lint, coverage, security, summary)
+- ✅ **Automated Builds**: WASM artifact generation on every push
 
-#### 6. **On-Chain Storage** ✅
-- ✅ Complete data storage on Stellar blockchain
-- ✅ No external database required
-- ✅ Immutable transaction history
-- ✅ Extended TTL (10000 blocks) for data persistence
-- ✅ All data publicly auditable
+#### 6. **Data & Storage** ✅
+- ✅ **100% On-Chain**: All data stored in Soroban instance storage
+- ✅ **No External DB**: Fully decentralized with no off-chain dependencies
+- ✅ **Immutable Records**: Commits, reveals, and winners permanently on-chain
+- ✅ **Extended TTL**: 10,000 block TTL for long-term data persistence
+- ✅ **Public Auditability**: Anyone can query contract storage
 
-### **What's Remaining**
+### **Deployment Status**
 
-#### 1. **Front-End Application** ❌
-- ❌ Web application/UI for user interaction
-- ❌ Wallet integration (Freighter, etc.)
-- ❌ Real-time round status display
-- ❌ Ticket purchase interface
-- ❌ Winner announcement interface
-- ❌ Transaction history viewer
+#### ✅ **Testnet Deployment** - COMPLETED
+- ✅ **Contract Deployed**: `CCPLB77GYAU53P3NZJW7WUMFOJ2IV3O7NZUC7Q7RQPD4CRHWB5XEN2MM`
+- ✅ **Network**: Stellar Testnet
+- ✅ **Initialized**: Admin and token configured
+- ✅ **Status**: Operational and ready for testing
+- 📊 **Explorer**: [View on Stellar Expert](https://stellar.expert/explorer/testnet/contract/CCPLB77GYAU53P3NZJW7WUMFOJ2IV3O7NZUC7Q7RQPD4CRHWB5XEN2MM)
 
-#### 2. **Real Network Deployment** ⚠️
-- ⚠️ Deployment to Stellar testnet (for testing)
-- ⚠️ Deployment to Stellar mainnet (for production)
-- ⚠️ Integration with real Stellar tokens
-- ⚠️ Real-time blockchain data usage
+#### ⚠️ **Mainnet Deployment** - PENDING
+- ⚠️ Requires security audit
+- ⚠️ Requires production token selection
+- ⚠️ Requires economic analysis
+- ⚠️ Requires legal compliance review
 
-#### 3. **Future Enhancements** (See Future Scope section below)
+### **What's Next**
+
+#### 1. **Front-End Development** (In Progress)
+- ⚠️ React-based web application
+- ⚠️ Freighter wallet integration
+- ⚠️ Round status dashboard
+- ⚠️ Ticket purchase flow with commit hash generation
+- ⚠️ Seed reveal interface
+- ⚠️ Winner announcement display
+
+#### 2. **Production Readiness**
+- ⚠️ Professional security audit
+- ⚠️ User acceptance testing
+- ⚠️ Performance optimization
+- ⚠️ Mainnet deployment
 
 ---
 
-## 📊 Current State vs Original Plan
+## 📊 Feature Implementation Matrix
 
-| Feature | Original Plan | Current Status |
-|---------|--------------|----------------|
-| Basic lottery contract | Planned | ✅ **Implemented** |
-| Token payments | Planned | ✅ **Implemented** |
-| Winner selection | Planned | ✅ **Implemented** (Enhanced with commit-reveal) |
-| Automatic payouts | Future Scope | ✅ **Implemented** |
-| Multiple tickets | Future Scope | ✅ **Implemented** |
-| Front-end UI | Not specified | ❌ **Not started** |
-| Testnet deployment | Planned | ⚠️ **Ready but not deployed** |
-| Mainnet deployment | Planned | ⚠️ **Not done** |
+| Feature | Status | Details |
+|---------|--------|----------|
+| **Core Contract** | ✅ Complete | 6 public functions, full CRUD operations |
+| **Commit-Reveal** | ✅ Complete | SHA256-based, 24h reveal window |
+| **Auto Payouts** | ✅ Complete | Atomic transfers, revert on failure |
+| **Multiple Tickets** | ✅ Complete | Configurable per round |
+| **Token Payments** | ✅ Complete | Soroban token interface |
+| **Testing** | ✅ Complete | 18/18 tests passing |
+| **CI/CD** | ✅ Complete | GitHub Actions, 6-job pipeline |
+| **Documentation** | ✅ Complete | 8 comprehensive guides |
+| **Testnet Deploy** | ✅ Complete | Live on Stellar Testnet |
+| **Front-End** | ⚠️ In Progress | React app under development |
+| **Mainnet Deploy** | ⚠️ Pending | Awaiting audit |
 
 ---
 
@@ -217,74 +245,219 @@ stellar contract invoke \
 
 ---
 
-## 📋 Contract API
+## 📋 Smart Contract API
 
-### **1. Initialize Contract** (Admin - One-time)
+### **Function Overview**
+
+| Function | Access | Phase | Description |
+|----------|--------|-------|-------------|
+| `init_admin` | Admin | Setup | One-time initialization |
+| `create_round` | Admin | Setup | Create new lottery round |
+| `buy_ticket` | Public | Commit | Purchase ticket with commit hash |
+| `reveal_seed` | Public | Reveal | Reveal committed seed |
+| `finalize_round` | Admin | Finalize | Select winner & distribute prize |
+| `view_round` | Public | Any | Query round information |
+
+---
+
+### **1. init_admin** (One-Time Setup)
 ```rust
-init_admin(admin: Address, token: Address)
+pub fn init_admin(env: Env, admin: Address, token: Address)
 ```
-- Initializes the contract with admin and payment token
-- Must be called once before any other operations
-- Cannot be called twice
 
-### **2. Create Lottery Round** (Admin Only)
+**Purpose**: Initialize contract with admin and payment token
+
+**Parameters**:
+- `admin`: Address with administrative privileges
+- `token`: Soroban token contract address for payments
+
+**Requirements**:
+- Can only be called once
+- Admin must sign transaction
+
+**Effects**:
+- Stores admin address
+- Stores token address
+- Extends storage TTL to 100,000 blocks
+
+---
+
+### **2. create_round** (Admin Only)
 ```rust
-create_round(
+pub fn create_round(
+    env: Env,
     ticket_price: i128,
     duration_hours: u64,
     allow_multiple: bool
 ) -> u64
 ```
-- Creates a new lottery round
-- Only one active round allowed at a time
-- Returns unique round ID
-- `allow_multiple`: `false` = one ticket per address, `true` = multiple tickets allowed
 
-### **3. Buy Lottery Ticket** (Public)
+**Purpose**: Create new lottery round
+
+**Parameters**:
+- `ticket_price`: Cost per ticket in token units (e.g., 1000000 = 1 token with 6 decimals)
+- `duration_hours`: Round duration before ticket sales close
+- `allow_multiple`: 
+  - `false` = One ticket per address (fair mode)
+  - `true` = Multiple tickets allowed (weighted mode)
+
+**Returns**: Round ID (sequential, starts at 1)
+
+**Requirements**:
+- Admin authorization required
+- No other active round exists
+
+**Effects**:
+- Creates new `LotteryRound` with:
+  - `end_time` = current_time + duration_hours
+  - `reveal_deadline` = end_time + 24 hours
+  - `is_active` = true
+  - `finalized` = false
+- Sets as active round
+- Increments round counter
+
+---
+
+### **3. buy_ticket** (Public - Commit Phase)
 ```rust
-buy_ticket(
+pub fn buy_ticket(
+    env: Env,
     round_id: u64,
     participant: Address,
     amount: i128,
-    commit_hash: BytesN<32>  // Commit-reveal hash
+    commit_hash: BytesN<32>
 )
 ```
-- Purchase a ticket with token payment
-- Requires commit hash for commit-reveal scheme
-- Validates exact payment amount
-- Transfers tokens from participant to contract
-- Stores commit hash for later verification
 
-### **4. Reveal Seed** (Participants - After Round Ends)
+**Purpose**: Purchase lottery ticket with commit hash
+
+**Parameters**:
+- `round_id`: Target lottery round
+- `participant`: Buyer's address
+- `amount`: Payment amount (must equal ticket_price)
+- `commit_hash`: `SHA256(seed || participant_address || round_id)`
+
+**Commit Hash Generation**:
+```javascript
+// JavaScript example
+const seed = crypto.getRandomValues(new Uint8Array(32));
+const hashInput = concat(seed, addressBytes, roundIdBytes);
+const commitHash = SHA256(hashInput);
+// IMPORTANT: Store seed securely for reveal phase!
+```
+
+**Requirements**:
+- Participant authorization required
+- Round must be active
+- Current time < end_time
+- Amount must equal ticket_price exactly
+- If `allow_multiple = false`, participant cannot have existing ticket
+
+**Effects**:
+- Transfers tokens from participant to contract
+- Increments participants_count
+- Adds amount to total_pool
+- Stores participant address
+- Stores commit hash
+- Updates round data
+
+---
+
+### **4. reveal_seed** (Public - Reveal Phase)
 ```rust
-reveal_seed(
+pub fn reveal_seed(
+    env: Env,
     round_id: u64,
     participant: Address,
     seed: Bytes
 )
 ```
-- Reveals the seed used in commit hash
-- Must be called between `end_time` and `reveal_deadline` (24 hours)
-- Verifies seed matches stored commit hash
-- Required for winner selection
 
-### **5. Finalize Round** (Admin Only - After Reveal Deadline)
-```rust
-finalize_round(round_id: u64) -> Address
-```
-- Combines all revealed seeds
-- Adds blockchain entropy (ledger sequence)
-- Selects winner deterministically
-- Automatically transfers prize pool to winner
-- Marks round as finalized
-- Returns winner address
+**Purpose**: Reveal seed to prove commit hash
 
-### **6. View Round Information** (Public)
+**Parameters**:
+- `round_id`: Lottery round
+- `participant`: Revealer's address
+- `seed`: Original random seed used in commit hash
+
+**Requirements**:
+- Participant authorization required
+- Round must exist
+- Current time >= end_time (round ended)
+- Current time < reveal_deadline (within 24h window)
+- Participant must have committed (bought ticket)
+- `SHA256(seed || participant || round_id)` must match stored commit
+
+**Effects**:
+- Stores revealed seed
+- Extends storage TTL
+
+**Note**: Missing reveals don't prevent finalization
+
+---
+
+### **5. finalize_round** (Admin Only - Finalization)
 ```rust
-view_round(round_id: u64) -> LotteryRound
+pub fn finalize_round(env: Env, round_id: u64) -> Address
 ```
-- Query any lottery round's details
-- Returns: round_id, ticket_price, total_pool, participants_count, is_active, winner, end_time, reveal_deadline, finalized, allow_multiple
+
+**Purpose**: Select winner and distribute prize
+
+**Algorithm**:
+1. Combine revealed seeds: `h = SHA256(h || seed)` for each reveal
+2. Add blockchain entropy: `final = SHA256(combined || ledger_sequence)`
+3. Select winner: `index = (first_8_bytes(final) % participants) + 1`
+4. Transfer prize pool to winner
+5. Mark round finalized
+
+**Requirements**:
+- Admin authorization required
+- Round must be active
+- Round not already finalized
+- At least one participant
+- Current time >= reveal_deadline
+
+**Returns**: Winner's address
+
+**Effects**:
+- Transfers total_pool to winner (atomic)
+- Sets is_active = false
+- Sets finalized = true
+- Records winner address
+- Clears active round
+- Logs winner selection
+
+**Security**: Transfer happens BEFORE state update (prevents reentrancy)
+
+---
+
+### **6. view_round** (Public - Read-Only)
+```rust
+pub fn view_round(env: Env, round_id: u64) -> LotteryRound
+```
+
+**Purpose**: Query round information
+
+**Parameters**:
+- `round_id`: Round to query
+
+**Returns**: `LotteryRound` struct:
+```rust
+pub struct LotteryRound {
+    pub round_id: u64,
+    pub ticket_price: i128,
+    pub total_pool: i128,
+    pub participants_count: u64,
+    pub is_active: bool,
+    pub winner: Option<Address>,
+    pub end_time: u64,
+    pub reveal_deadline: u64,
+    pub finalized: bool,
+    pub allow_multiple: bool,
+}
+```
+
+**Note**: Returns default (zero) values if round doesn't exist
 
 ---
 
@@ -384,16 +557,22 @@ cargo test -- --nocapture --test-threads=1
 
 ---
 
-## 📚 Documentation Files
+## 📚 Documentation
 
-1. **README.md** (This file) - Project overview and status
-2. **VERIFICATION.md** - External verification guide for commit-reveal scheme
-3. **COMMIT_REVEAL_IMPLEMENTATION.md** - Technical details of commit-reveal system
-4. **QUICK_START.md** - Quick reference guide
-5. **IMPLEMENTATION_SUMMARY.md** - Original features summary
-6. **FINAL_SUMMARY.md** - Commit-reveal and payout implementation
-7. **MULTIPLE_TICKETS_AND_CI_SUMMARY.md** - Multiple tickets feature details
-8. **IMPLEMENTATION_COMPLETE.md** - Complete feature list and statistics
+### **Essential Guides**
+1. **README.md** (This file) - Complete project overview
+2. **VERIFICATION.md** - External verification guide with Python script
+3. **DEPLOYMENT_GUIDE.md** - Testnet/mainnet deployment instructions
+4. **QUICK_START.md** - Quick reference for common operations
+
+### **Technical Details**
+5. **COMMIT_REVEAL_IMPLEMENTATION.md** - Deep dive into randomness system
+6. **MULTIPLE_TICKETS_AND_CI_SUMMARY.md** - Multiple tickets & CI/CD details
+7. **IMPLEMENTATION_COMPLETE.md** - Complete feature list and statistics
+8. **TESTING_CHECKLIST.md** - Testing procedures and checklist
+
+### **Status Reports**
+9. **TESTNET_DEPLOYMENT_STATUS.md** - Testnet deployment details
 
 ---
 
@@ -423,39 +602,132 @@ cargo test -- --nocapture --test-threads=1
 
 ## 📊 Contract Statistics
 
-- **Contract Version**: 3.0.0 (Commit-Reveal + Auto-Payout + Multiple Tickets)
-- **Test Coverage**: 18/18 passing (100%)
-- **Build Status**: ✅ Success
-- **WASM Size**: ~50KB (optimized)
-- **Exported Functions**: 6
-- **Storage Type**: On-chain (Stellar blockchain)
-- **External Dependencies**: None (fully decentralized)
+| Metric | Value |
+|--------|-------|
+| **Contract Version** | 3.0.0 |
+| **WASM Hash** | `7b3c5243fd20476fedcf94074292c41c7607346c611176534abbe71cabe14056` |
+| **Contract Size** | ~50KB (optimized) |
+| **Exported Functions** | 6 (init_admin, create_round, buy_ticket, reveal_seed, finalize_round, view_round) |
+| **Test Coverage** | 18/18 passing (100%) |
+| **Test Execution Time** | 0.30 seconds |
+| **Storage Type** | On-chain (Soroban instance storage) |
+| **TTL** | 10,000 blocks (extended) |
+| **External Dependencies** | None (fully decentralized) |
+| **SDK Version** | Soroban SDK 23.0.2 |
+| **Rust Edition** | 2021 |
 
 ---
 
-## 🌐 Contract Details
+## 🌐 Deployed Contracts
 
-**Testnet Contract**: `CCPLB77GYAU53P3NZJW7WUMFOJ2IV3O7NZUC7Q7RQPD4CRHWB5XEN2MM`
+### **Stellar Testnet** ✅
+- **Contract ID**: `CCPLB77GYAU53P3NZJW7WUMFOJ2IV3O7NZUC7Q7RQPD4CRHWB5XEN2MM`
+- **Network**: Stellar Testnet
+- **Status**: ✅ Operational
+- **Explorer**: [View on Stellar Expert](https://stellar.expert/explorer/testnet/contract/CCPLB77GYAU53P3NZJW7WUMFOJ2IV3O7NZUC7Q7RQPD4CRHWB5XEN2MM)
 
-![Contract Explorer](stellar.expert_explorer_testnet_contract_CCPLB77GYAU53P3NZJW7WUMFOJ2IV3O7NZUC7Q7RQPD4CRHWB5XEN2MM.png)
+![Testnet Contract](image.png)
 
-**Built with Soroban SDK v23.0.2 on Stellar Blockchain**
+### **Stellar Mainnet** ⚠️
+- **Status**: Not deployed (awaiting security audit)
 
-*Where luck meets transparency, and fairness is guaranteed by code*
+---
+
+## 🔄 Lottery Workflow
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│ PHASE 1: SETUP (Admin)                                      │
+├─────────────────────────────────────────────────────────────┤
+│ 1. Deploy contract                                          │
+│ 2. init_admin(admin, token)                                 │
+│ 3. create_round(price, duration, allow_multiple)            │
+└─────────────────────────────────────────────────────────────┘
+                            ↓
+┌─────────────────────────────────────────────────────────────┐
+│ PHASE 2: COMMIT (Participants - Duration Hours)             │
+├─────────────────────────────────────────────────────────────┤
+│ 1. Generate random seed                                     │
+│ 2. Compute commit_hash = SHA256(seed || address || round)   │
+│ 3. buy_ticket(round, address, amount, commit_hash)          │
+│ 4. Store seed securely for reveal phase                     │
+└─────────────────────────────────────────────────────────────┘
+                            ↓
+┌─────────────────────────────────────────────────────────────┐
+│ PHASE 3: REVEAL (Participants - 24 Hour Window)             │
+├─────────────────────────────────────────────────────────────┤
+│ 1. Wait for round to end (end_time reached)                 │
+│ 2. reveal_seed(round, address, seed)                        │
+│ 3. Contract verifies seed matches commit                    │
+└─────────────────────────────────────────────────────────────┘
+                            ↓
+┌─────────────────────────────────────────────────────────────┐
+│ PHASE 4: FINALIZE (Admin - After Reveal Deadline)           │
+├─────────────────────────────────────────────────────────────┤
+│ 1. Wait for reveal_deadline to pass                         │
+│ 2. finalize_round(round)                                    │
+│ 3. Contract combines revealed seeds                         │
+│ 4. Adds blockchain entropy (ledger sequence)                │
+│ 5. Selects winner deterministically                         │
+│ 6. Transfers prize pool to winner automatically             │
+└─────────────────────────────────────────────────────────────┘
+```
 
 ---
 
 ## ⚠️ Important Notes
 
-1. **Mock vs Real Data**: Tests use mock data. Deploy to testnet/mainnet for real blockchain data.
-2. **Storage**: All data is on-chain. No external database is used or needed.
-3. **Front-End**: Currently, only the smart contract exists. A front-end application needs to be built for user interaction.
-4. **Deployment**: Contract is ready for deployment but requires:
-   - Stellar account with XLM for fees
-   - Token contract address for payments
-   - Network connectivity
+### **For Developers**
+1. **Commit Hash**: Front-end must generate `SHA256(seed || address || round_id)` and store seed
+2. **Reveal Window**: 24 hours after round ends - participants must reveal within this time
+3. **Missing Reveals**: Don't prevent finalization - lottery proceeds with available reveals
+4. **Token Decimals**: Account for token decimals when setting ticket_price (e.g., 1000000 = 1 token with 6 decimals)
+
+### **For Users**
+1. **Seed Storage**: Keep your seed safe! You need it to reveal after the round ends
+2. **Reveal Requirement**: You must reveal your seed to be eligible for winning
+3. **Timing**: Buy tickets before `end_time`, reveal between `end_time` and `reveal_deadline`
+4. **Fairness**: Winner selection is deterministic and verifiable - see VERIFICATION.md
+
+### **Security Considerations**
+1. **Audits**: Professional security audit recommended before mainnet deployment
+2. **Testing**: All features tested on testnet before mainnet use
+3. **Verification**: Anyone can verify winner selection using documented algorithms
+4. **Transparency**: All data is on-chain and publicly auditable
 
 ---
 
-**Last Updated**: 2024  
-**Implementation Status**: Smart Contract Complete ✅ | Front-End Pending ❌ | Testnet Ready ⚠️
+## 🤝 Contributing
+
+Contributions are welcome! Please:
+1. Fork the repository
+2. Create a feature branch
+3. Add tests for new features
+4. Ensure all tests pass (`cargo test`)
+5. Submit a pull request
+
+---
+
+## 📄 License
+
+This project is open source. See LICENSE file for details.
+
+---
+
+## 📞 Support & Contact
+
+- **Issues**: [GitHub Issues](https://github.com/Praanshuu/Decentralized-Lottery/issues)
+- **Documentation**: See documentation files listed above
+- **Verification**: See VERIFICATION.md for external verification guide
+
+---
+
+**Built with ❤️ on Stellar Blockchain**
+
+*Where transparency meets fairness, and every draw is provably random*
+
+---
+
+**Last Updated**: November 2, 2025  
+**Version**: 3.0.0  
+**Status**: ✅ Smart Contract Complete | ⚠️ Front-End In Progress | ✅ Testnet Deployed
